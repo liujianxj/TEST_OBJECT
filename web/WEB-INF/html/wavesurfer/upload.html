@@ -1,0 +1,156 @@
+<html>
+<head>
+<title>wavesurf test2 Play</title>
+        <!-- Bootstrap -->
+
+        <!-- wavesurfer.js -->
+        <script src="src/wavesurfer.js"></script>
+        <script src="src/util.js"></script>
+        <script src="src/webaudio.js"></script>
+        <script src="src/mediaelement.js"></script>
+        <script src="src/drawer.js"></script>
+        <script src="src/drawer.canvas.js"></script>
+</head>
+<body>
+<script>
+function onPlay() {
+	console.log('inside onPlay');
+	waveObj.wave.play();
+}
+function onStop() {
+	console.log('inside onStop');
+	waveObj.wave.stop();
+}
+</script>
+
+<div id="waveform"></div>
+<button onclick="onPlay()">Play</button>
+<button onclick="onStop()">Stop</button>
+<button id="showfiles">ShowFiles</button>
+	<input type="file" id="files" multiple>
+	<div id="pic"></div>
+	<div id="holder"></div>
+
+<progress min="0" max="100" value="0">0% complete</progress>
+
+<button id="buttonblob">Blob</button>
+
+<script>
+
+var fileSelected = [];
+
+function onUploadFile(evt) {
+	var button = evt.target;
+	var id = button.id;
+	var idNum  = id.replace('upload', '');
+	var i = parseInt(idNum);
+	var file = fileSelected[i];
+
+	console.log(file);
+
+	var xhr = new XMLHttpRequest();
+	xhr.open('post', '/api_upload_file', true);
+	//xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+	xhr.setRequestHeader('X-File-Name', file.name);
+	xhr.setRequestHeader('X-File-Size',file.size);
+	//xhr.setRequestHeader('X-File-Type', file.type);
+
+	var remain = file.size;
+	var start = 0;
+	//var packet = file.slice(0, remain);
+	var form = new FormData();	
+	form.append('files', file);	
+	xhr.send(form);
+
+	/*
+	while (remain > 0) {
+		var bytes = remain < 1024?remain:1024;
+		console.log('make sliece start ' + start + ' bytes ' + bytes);
+		var packet = file.slice(start, start + bytes);
+		console.log(packet);
+		xhr.send(packet);
+		start = start + bytes;
+		remain = remain - bytes;
+		console.log('send remain is ' + remain);
+	};
+	*/
+	console.log('begin send file to server');
+}
+
+function onShowFiles() {
+	console.log('inside onShowFiles');
+	for (var i = 0; i < fileSelected.length;i++) {
+		var file = fileSelected[i];
+		console.log(file.name);
+		console.log(file.size);
+	}
+}
+
+function createImgDiv(id) {
+	var upload = "<button id='upload" + id + "'>upload" + "</button>";
+	var html = '<div>' + "<img id='pic" + id + "'>" + '</img>' + upload +  
+			'</div>';
+	return html;
+}
+
+function showImg(result, holderId) {
+	console.log('inside showImg');
+	var img = new Image();
+	img.src = result;
+	var holder = document.getElementById(holderId);
+	holder.appendChild(img); 
+}
+
+function readFileToImg(file, holderId) {
+	var reader = new FileReader();
+	reader.onloadend = function(e) {
+			showImg(this.result, holderId);
+	};
+	reader.readAsDataURL(file);
+} 
+
+function onFileSelect(evt) {
+	var files = evt.target.files;
+	var divs = [];
+	for (var i = 0; i < files.length; i++) {
+		divs.push(createImgDiv(i));
+	}
+	document.getElementById('pic').innerHTML = divs.join('');
+
+	fileSelected = [];
+
+	for (var i = 0; i < files.length; i++) {
+		var f = files[i];
+		console.log(f.name);
+		readFileToImg(f, 'pic' + i);
+		fileSelected.push(f);
+		document.getElementById('upload'+i).addEventListener('click', onUploadFile);
+	}
+
+}
+
+
+function uploadBlob(blobOrFile) {
+	console.log('inside uploadBlob');
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("post", "/deal_upload.php", true);
+	xhr.onload = function(e) {};
+	var progressBar = document.querySelector('progress');
+	xhr.upload.onprogress = function(e) {
+		progressBar.value = (e.loaded/e.total);
+		progressBar.textContent = progressBar.value;
+	}
+
+	xhr.send(blobOrFile);
+}
+
+document.getElementById('files').addEventListener('change', onFileSelect);
+document.getElementById('showfiles').addEventListener('click', onShowFiles);
+
+uploadBlob(new Blob(['hello'],{type:'text/plain'}));
+
+</script>
+</body>
+
+</html>

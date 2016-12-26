@@ -1,0 +1,136 @@
+
+<!-- saved from url=(0050)http://www.ieyebrain.com:8080/audio/wavesurfer.js/ -->
+<html><style type="text/css" id="21866708495"></style><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>wavesurf test3 edit</title>
+        <!-- Bootstrap -->
+        <!-- wavesurfer.js -->
+        <script src="src/wavesurfer.js"></script>
+        <script src="src/util.js"></script>
+        <script src="src/webaudio.js"></script>
+        <script src="src/mediaelement.js"></script>
+        <script src="src/drawer.js"></script>
+        <script src="src/drawer.canvas.js"></script>
+        <script src="src/audiosequence.js"></script>
+        <script src="plugin/wavesurfer.timeline.js"></script>
+        <script src="plugin/wavesurfer.regions.js"></script>
+        <script src="plugin/wavesurfer.editor.js"></script>
+        <style>
+        .bj{
+        	padding-right: 20px;
+        }
+        </style>
+</head>
+<body>
+<div class="container">
+<div class="demo">
+	<div id="waveform">
+<!-- 		<wave style="display: block; position: relative; -webkit-user-select: none; height: 128px; overflow-x: auto; overflow-y: hidden;">
+			<canvas width="1333" height="128" style="position: absolute; z-index: 1; left: 0px; top: 0px; bottom: 0px; width: 1333px;"></canvas>
+			<wave style="position: absolute; z-index: 2; left: 0px; top: 0px; bottom: 0px; overflow: hidden; width: 0px; display: block; box-sizing: border-box; border-right-style: solid; border-right-width: 1px; border-right-color: navy;">
+				<canvas width="1333" height="128" style="width: 1333px;"></canvas>
+			</wave>
+		</wave> -->
+	</div>
+	<div id="wave-timeline"><timeline style="display: block; position: relative; -webkit-user-select: none; height: 20px; width: 100%; overflow: hidden;"><canvas width="1333" height="20" style="position: absolute; z-index: 4; width: 1333px; height: 20px;"></canvas></timeline></div>
+</div>
+<div id="shengdao1">
+	<div id="waveform1"></div>
+	<div id="wave-timeline1"><timeline style="display: block; position: relative; -webkit-user-select: none; height: 20px; width: 100%; overflow: hidden;"><canvas width="1333" height="20" style="position: absolute; z-index: 4; width: 1333px; height: 20px;"></canvas></timeline></div>
+</div>
+</div>
+
+<button id="cutbutton">剪切</button>
+<!-- <button id="copybutton">复制</button> -->
+<!-- <button id="pastebutton">粘贴</button> -->
+<button id="undobutton">撤销</button>
+<button id="clearbutton">清除选取</button>
+<strong>|</strong>
+<button id="playbutton">Play</button>
+<button id="stopbutton">停止</button>
+<strong>|</strong>
+<button id="uploadbutton">上传</button>
+<button id="downloadbutton">下载</button>
+<button onclick="clickradio()">test</button>
+<!-- <button id="savebutton">Export</button> -->
+<a href="" download="demo.wav" id="saveanchor">Save</a>
+<progress min="0" max="100" value="0">0% complete</progress>
+<input type="file" id="wavefile" value="open" text="open">
+<hr>
+<div>
+	放大<span id="zoomValue"></span>
+	<input type="range" id="zoom" min="0" max="500" value="0" step="100" style="width=100%">
+	<button id="zoomfitbutton">播放进度</button>
+	<input type="range" id="seek" min="0" max="100" value="0" step="1">
+	
+	音量
+	<input type="range" id="volume" min="0.1" max="5" value="1" step="0.01">
+</div>
+<hr>
+<div>
+<!-- <label><input type="checkbox" id="mute">Mute</label> -->
+</div>
+<div>
+<input type="radio" value="1-5,7-10,15-17" name="lj"><span class="bj">标记1-5</span><span class="bj">标记7-10</span><span class="bj">标记15-17</span>
+</div>
+<div>
+<input type="radio" value="3-5,8-15" name="lj"><span class="bj">标记3-5</span><span class="bj">标记8-15</span>
+</div>
+<div>
+<input type="radio" value="6-7" name="lj"><span class="bj">标记6-7</span>
+</div>
+<div id="cutlog">
+截取的时间为：
+</div>
+<script src="../../js/jquery-1.7.2-min.js"></script>
+<script src="example/test3lj.js"></script>
+<script>
+$(function(){
+	$("input[name='lj']:radio").click(function(){
+		var arr = $(this).val().split(",");
+		waveObj.wavesurfer.regions.clearDrag();
+		for(var i=0 in arr){
+			waveObj.wavesurfer.addRegion({
+			    start: arr[i].split("-")[0],
+			    end: arr[i].split("-")[1],
+			    drag:false,
+			    resize:false,
+			    color: 'hsla(360, 100%, 10%, 0.2)'
+			});
+		}
+		
+	})
+		
+	
+})
+
+function clickradio(){
+	var arr = $("[name='lj']:radio:checked").val().split(",");
+	waveObj.wavesurfer.regions.clearDrag();
+	for(var i=0 in arr){
+		waveObj.wavesurfer.addRegion({
+		    start: arr[i].split("-")[0],
+		    end: arr[i].split("-")[1],
+		    drag:false,
+		    resize:false,
+		    color: 'hsla(360, 100%, 10%, 0.2)'
+		});
+	}
+}
+
+
+	//声道1
+	var wavesurferlj = WaveSurfer.create({
+	    container: '#waveform1',
+	    interact: false
+	});
+	wavesurferlj.load('../../html/mp3.mp3');
+	
+	/* var timelinelj = Object.create(WaveSurfer.Timeline);
+	timelinelj.init({
+	  wavesurfer: wavesurferlj,
+	  container: '#wave-timeline1'
+	}); */
+</script>
+
+
+</body></html>

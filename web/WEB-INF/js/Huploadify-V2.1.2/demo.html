@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Huploadify demo</title>
+<link rel="stylesheet" type="text/css" href="Huploadify.css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="jquery.Huploadify.js"></script>
+<style type="text/css">
+</style>
+<script type="text/javascript">
+$(function(){
+	var up = $('#upload').Huploadify({
+		auto:false,
+		fileTypeExts:'*.jpg;*.png;*.exe;*.mp3;*.mp4;*.zip;*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx;*.pdf',
+		multi:true,
+		fileSizeLimit:99999999,
+		breakPoints:true,
+		saveInfoLocal:true,
+		showUploadedPercent:true,//是否实时显示上传的百分比，如20%
+		showUploadedSize:true,
+		removeTimeout:9999999,
+		uploader:'upload.php',
+		onUploadStart:function(){
+			//up.settings('formData', {aaaaa:'1111111',bb:'2222'});
+			up.Huploadify('settings','formData', {aaaaa:'1111111',bb:'2222'});
+		},
+		onUploadSuccess:function(file){
+			//alert('上传成功');
+		},
+		onUploadComplete:function(){
+			//alert('上传完成');
+		},
+		/*getUploadedSize:function(file){
+			var data = {
+				data : {
+					fileName : file.name,
+					lastModifiedDate : file.lastModifiedDate.getTime()
+				}
+			};
+			var url = 'http://49.4.132.173:8080/admin/uploadfile/index/';
+			var uploadedSize = 0;
+			$.ajax({
+				url : url,
+				data : data,
+				async : false,
+				type : 'POST',
+				success : function(returnData){
+					returnData = JSON.parse(returnData);
+					uploadedSize = returnData.uploadedSize;
+				}
+			});
+			return uploadedSize;
+		}	*/	
+	});
+
+	$('#btn1').click(function(){
+		up.stop();
+	});
+	$('#btn2').click(function(){
+		up.upload('*');
+	});
+	$('#btn3').click(function(){
+		up.cancel('*');
+	});
+	$('#btn4').click(function(){
+		//up.disable();
+		up.Huploadify('disable');
+	});
+	$('#btn5').click(function(){
+		up.ennable();
+	});
+	$('#btn6').click(function(){
+		up.destroy();
+	});
+
+});
+</script>
+</head>
+
+<body>
+<div id="upload"></div>
+<button id="btn1">stop</button>
+<button id="btn2">upload</button>
+<button id="btn3">cancel</button>
+<button id="btn4">disable</button>
+<button id="btn5">ennable</button>
+<button id="btn6">destroy</button>
+
+</body>
+</html>

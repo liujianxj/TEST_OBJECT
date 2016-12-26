@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../js/jquery-1.7.2-min.js"></script>
+
+</head>
+<body>
+<div style="position:relative;">
+<canvas id="canvas1" width="580" height="726" style="position: absolute;"></canvas>
+<canvas id="canvas2" width="580" height="326" style="position: absolute;"></canvas>
+</div>
+
+<div style="position:relative;">
+<input type="button" style="display: none;" id="ok" value="ok" onclick="jiequ()"/>
+</div>
+
+<script>
+var canvas = document.getElementById('canvas1');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+var i = 0;
+var startX = 0;
+var arr = new Array(2);
+
+imageObj.src = "lj.jpg";
+imageObj.onload = function() {
+context.drawImage(imageObj,0,0)
+}
+
+var canvas2 = document.getElementById('canvas2');
+var context2 = canvas2.getContext('2d');
+$('#canvas2').mousedown(function(e){
+	var mouseX = e.pageX - this.offsetLeft;
+	//防止向后选取
+	if(startX >= mouseX){
+		return false;
+	}
+	
+	context2.beginPath();
+	context2.lineWidth="2";
+	context2.strokeStyle="red";
+	context2.moveTo(mouseX,0);
+	context2.lineTo(mouseX,326);
+	context2.stroke();
+	i+=1;
+	startX = mouseX;
+	if(i >= 3){
+		context2.clearRect(0,0,580,326)
+		i = 0;
+		startX = 0;
+		$("#ok").hide();
+	}else if(i == 1){
+		arr[0] = mouseX
+	}else if(i == 2){
+		arr[1] = mouseX
+		$("#ok").show();
+	}
+});
+
+function jiequ(){
+	var imgData=context.getImageData(arr[0],0,arr[1]-arr[0],326);
+	context.putImageData(imgData,0,326);
+	context.clearRect(arr[0],0,arr[1]-arr[0],326)
+}
+</script>
+</body>
+</html>

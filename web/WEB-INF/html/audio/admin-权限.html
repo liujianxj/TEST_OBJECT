@@ -1,0 +1,444 @@
+<!doctype html>
+<html class="no-js fixed-layout">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>音频管理平台</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="index">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="icon" type="image/png" href="assets/i/favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-title" content="音频管理平台" />
+  <link rel="stylesheet" href="assets/css/amazeui.css"/>
+  <link rel="stylesheet" href="assets/css/admin.css">
+
+  
+
+  
+</head>
+<body class="context-BGY">
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+  以获得更好的体验！</p>
+<![endif]-->
+
+<!--[导航-开始]-->
+<header class="am-topbar  am-u-lg-12">
+  <h1 class="am-topbar-brand">
+     <img src="assets/i/logo-1.png" >
+  </h1>
+  
+<button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success " data-am-collapse="{target: '#doc-topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+  <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
+    <ul class="am-nav am-nav-pills am-topbar-nav">
+      <li><a href="admin-index.html"><span class="am-icon-home">首页</span></a></li>
+      <li><a href="admin-数据.html"><span class="am-icon-bar-chart">数据</span></a></li>
+      <li><a href="admin-业务.html"><span class="am-icon-suitcase">业务</span></a></li>
+      <li><a href="admin-统计.html"><span class="am-icon-pie-chart">统计</span></a></li>
+      <li><a href="admin-用户.html"><span class="am-icon-users">用户</span></a></li>
+      <li class="am-active "><a href="admin-权限.html"><span class="am-icon-sitemap">权限</span></a></li>
+      <li><a href="admin-运维.html"><span class="am-icon-gears">运维</span></a></li>
+    </ul>
+
+
+    <div class="am-topbar-right">
+      <li class="am-hide-sm-only ">
+         <button class="am-btn am-btn-primary am-topbar-btn am-btn-sm" href="javascript:;" id="admin-fullscreen">
+            <span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span>
+         </button>
+      </li>
+    </div>
+
+
+    <div class="am-topbar-right">
+      <div class="am-padding-top am-padding-right-sm am-dropdown" data-am-dropdown="{boundary: '.am-topbar'}">
+        <a href="" class="am-btn-sm am-dropdown-toggle" data-am-dropdown-toggle>您好 ADMIN <span class="am-icon-caret-down"></span></a>
+        <ul class="am-dropdown-content">
+          <li><a href="#">注册</a></li>
+          <li><a href="#">随便看看</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</header>
+<!--[导航-结束]-->
+
+<!--[主体-结束]-->
+<div class="am-cf admin-main">
+
+      <div class="am-g">
+          <div class="am-u-sm-12 am-u-sm-centered ">
+          
+             <div class="am-u-sm-12">
+                <div class="web-reel am-u-sm-12 web-main-8 am-panel-bd web-main">
+
+                   <div class="am-u-sm-12 am-margin-top font-12 ">
+                      <div class="am-g am-u-md-9 text-LT_BU">
+                      </div>
+                      <div class="am-g am-u-md-3">
+                         <div class="align_right">
+                            <button class="am-btn am-btn-success am-icon-plus am-btn-sm" data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 400, height: 300}"> 添加权限 </button>
+                         </div>
+                      </div>
+                   </div><!--[am-u-sm-12]-->
+
+                   
+                   
+
+                   <div class="am-u-sm-12 font-12 web-table">
+                   
+                         <table class="am-table am-table-striped am-table-hover">
+                            <thead>
+                               <tr>
+                                  <th>权限级别</th>
+                                  <th>人数</th>
+                                  <th>操作</th>
+                               </tr>
+                            </thead>
+                            <tbody>
+                               <tr>
+                                  <td>普通用户</td>
+                                  <td class="am-input-group-sm">472</td>
+                                  <td class="am-input-group-sm">
+                                     <div class="am-dropdown" data-am-dropdown>
+                                         <button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle>
+                                            <span class="am-icon-cog"></span> <span class="am-icon-caret-down"></span>
+                                         </button>
+                                            <ul class="am-dropdown-content">
+                                               <li><a href="#" data-am-modal="{target: '#doc-modal-2', closeViaDimmer: 0}">修改</a></li>
+                                               <li><a href="#">删除</a></li>
+                                            </ul>
+                                     </div>
+                                  </td>
+                               </tr>
+                               <tr>
+                                  <td>管理员</td>
+                                  <td class="am-input-group-sm">11</td>
+                                  <td class="am-input-group-sm">
+                                     <div class="am-dropdown" data-am-dropdown>
+                                         <button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle>
+                                            <span class="am-icon-cog"></span> <span class="am-icon-caret-down"></span>
+                                         </button>
+                                            <ul class="am-dropdown-content">
+                                               <li><a href="#" data-am-modal="{target: '#doc-modal-2', closeViaDimmer: 0}">修改</a></li>
+                                               <li><a href="#">删除</a></li>
+                                            </ul>
+                                     </div>
+                                  </td>
+                               </tr>
+                               <tr>
+                                  <td>高级管理员</td>
+                                  <td class="am-input-group-sm">1</td>
+                                  <td class="am-input-group-sm">
+                                     <div class="am-dropdown" data-am-dropdown>
+                                         <button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle>
+                                            <span class="am-icon-cog"></span> <span class="am-icon-caret-down"></span>
+                                         </button>
+                                            <ul class="am-dropdown-content">
+                                               <li><a href="#" data-am-modal="{target: '#doc-modal-2', closeViaDimmer: 0}">修改</a></li>
+                                               <li><a href="#">删除</a></li>
+                                            </ul>
+                                     </div>
+                                  </td>
+                               </tr>
+
+                            </tbody>
+                         </table>
+                         
+                   </div><!--[am-u-sm-12]-->
+
+                </div>
+             </div>
+             
+          </div>
+      </div>
+
+
+</div>
+<!--[主体-结束]-->
+
+
+<!--[版权信息-开始]-->
+
+<footer class="web-footer ">
+      <p> Copyright © 2016-2026 All Rights Reserved</p>
+</footer>
+
+
+
+<!--[版权信息-结束]-->
+
+
+<!--[模态窗-开始]-->
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-1">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">权限管理
+      <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+    </div>
+    <div class="am-modal-bd">
+      <div class="am-g font-12 align_left">
+      
+         <div class="am-u-sm-12 am-input-group-sm am-margin-top">
+            权限名:
+            <input type="text" class="am-form-field" placeholder="请输入">
+         </div>
+
+         <div class="am-u-sm-12 am-input-group-sm am-margin-top">
+            级别:
+            <select class="list-u-12" multiple data-am-selected>
+                <option value="option1"  selected>选项一...</option>
+                <option value="option2" >选项二.....</option>
+                <option value="option3" >选项三........</option>
+            </select>
+         </div>
+         
+      </div>
+      <div class="am-u-sm-12 am-margin-top">
+      <input type="button" class="am-btn am-btn-secondary btn-loading-example am-btn-block" value="提交" data-am-loading="{loadingText: '进行中...'}" />
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="am-popup" tabindex="-1" id="doc-modal-2">
+<div class="am-popup-inner">
+    <div class="am-popup-hd">
+      <h4 class="am-popup-title">权限分配</h4>
+      <span data-am-modal-close class="am-close">&times;</span>
+    </div>
+    <div class="am-popup-bd">
+       <div class="am-u-sm-6">
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+      </div>
+      <div class="am-u-sm-6">
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布公告
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 发布动态
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 上传数据
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 导出日志
+         </label>
+         <label class="am-checkbox am-secondary">
+            <input type="checkbox" value="" data-am-ucheck> 添加人员
+         </label>
+         
+      </div>
+      <input type="button" class="am-btn am-btn-secondary btn-loading-example am-btn-block am-margin-top" value="提交" data-am-loading="{loadingText: '进行中...'}" />
+    </div>
+  </div>
+</div>
+<!--[模态窗-结束]-->
+
+
+
+
+
+
+
+
+
+<!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="assets/js/jquery-3.0.0.js"></script>
+<!--<![endif]-->
+<script src="assets/js/amazeui.js"></script>
+<script src="assets/js/app.js"></script>
+
+
+<script>
+$('.btn-loading-example').click(function () {
+  var $btn = $(this)
+  $btn.button('loading');
+    setTimeout(function(){
+      $btn.button('reset');
+  }, 5000);
+});
+</script>
+
+
+</body>
+</html>
