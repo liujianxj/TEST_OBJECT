@@ -154,7 +154,10 @@ function init() {
         sphere.position.y = 4 + ( 10 * Math.abs(Math.sin(step)));
         //sphere.position.y =	( 10 * Math.PI)
 		scaleCube.scale.set(scale.scaleX, scale.scaleY, scale.scaleZ);
-        // render using requestAnimationFrame
+        
+		camera.lookAt(sphere.position);
+		
+		
         requestAnimationFrame(renderScene);
         renderer.render(scene, camera);
     }
