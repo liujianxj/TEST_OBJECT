@@ -131,9 +131,13 @@ function init() {
     var gui = new dat.GUI();
     gui.add(controls, 'rotationSpeed', 0, 0.5);
     gui.add(controls, 'bouncingSpeed', 0, 0.5);
-    gui.add(scale, 'scaleX', 0, 5);
-    gui.add(scale, 'scaleY', 0, 5);
-    gui.add(scale, 'scaleZ', 0, 5);
+    guiScale = gui.addFolder('scale');
+    guiScale.add(scale, 'scaleX', 0, 5);
+    guiScale.add(scale, 'scaleY', 0, 5);
+    guiScale.add(scale, 'scaleZ', 0, 5);
+    guiCamera = gui.addFolder('camera');
+    guiCamera.add(switchCamera,'switchCamera');
+    guiCamera.add(switchCamera,'perspective').listen();
     
     renderScene();
     var step = 0;
@@ -175,6 +179,7 @@ function initStats() {
 window.onload = init;
 </script>
 <script src="scale.js"></script>
+<script src="switchCamear.js"></script>
 </head>
 <body>
 <div id="Stats-output">
