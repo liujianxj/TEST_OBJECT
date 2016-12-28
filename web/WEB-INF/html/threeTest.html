@@ -131,16 +131,28 @@ function init() {
     var gui = new dat.GUI();
     gui.add(controls, 'rotationSpeed', 0, 0.5);
     gui.add(controls, 'bouncingSpeed', 0, 0.5);
-    guiScale = gui.addFolder('scale');
+    guiScale = gui.addFolder('scale缩放');
     guiScale.add(scale, 'scaleX', 0, 5);
     guiScale.add(scale, 'scaleY', 0, 5);
     guiScale.add(scale, 'scaleZ', 0, 5);
-    guiCamera = gui.addFolder('camera');
+    guiCamera = gui.addFolder('camera相机');
     guiCamera.add(switchCamera,'switchCamera');
     guiCamera.add(switchCamera,'perspective').listen();
+    guiLight = gui.addFolder('light光源');
+    guiLight.addColor(ambientLightGui, 'ambientColor').onChange(function (e) {
+        ambientLight.color = new THREE.Color(e);
+    });
+    guiLight.add(ambientLightGui, 'disableSpotlight').onChange(function (e) {
+        spotLight.visible = !e;
+    });
+    gui.add(cameraGui, 'isFollow').onChange(function (e) {
+    	isFollow = e;
+    });
+    
     
     renderScene();
     var step = 0;
+    var isFollow = false;
     function renderScene() {
     	stats.update();//每次更新FPS
         // rotate the cube around its axes
@@ -155,6 +167,8 @@ function init() {
         //sphere.position.y =	( 10 * Math.PI)
 		scaleCube.scale.set(scale.scaleX, scale.scaleY, scale.scaleZ);
         
+        //相机控制
+        if(isFollow)
 		camera.lookAt(sphere.position);
 		
 		
@@ -183,6 +197,8 @@ window.onload = init;
 </script>
 <script src="scale.js"></script>
 <script src="switchCamear.js"></script>
+<script src="ambientLight.js"></script>
+<script src="camera.js"></script>
 </head>
 <body>
 <div id="Stats-output">
