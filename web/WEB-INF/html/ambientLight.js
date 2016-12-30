@@ -9,4 +9,5 @@ scene.add(ambientLight);
 var ambientLightGui = new function(){
 	this.ambientColor = ambiColor;
     this.disableSpotlight = true;
+    this.shadowCameraVisible = false;
 }

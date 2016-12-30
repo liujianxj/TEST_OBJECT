@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>啊啊啊啊啊啊啊啊啊啊啊啊啊</title>
+
+<script src="../js/jquery-3.1.1.min.js"></script>
+<!-- r83 -->
+<script src="../js/three/build/three.min.js"></script>
+<script src="../js/three/examples/js/libs/dat.gui.min.js"></script>
+<script src="../js/three/examples/js/libs/stats.min.js"></script>
+<script src="../js/three/examples/js/Detector.js"></script>
+
+<script src="../js/three/examples/js/shaders/CopyShader.js"></script>
+<script src="../js/three/examples/js/shaders/FXAAShader.js"></script>
+
+<script src="../js/three/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="../js/three/examples/js/postprocessing/RenderPass.js"></script>
+<script src="../js/three/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="../js/three/examples/js/renderers/WebGLDeferredRenderer.js"></script>
+
+
+<script>
+
+//create a scene, that will hold all our elements such as objects, cameras and lights.
+var scene = new THREE.Scene();
+
+// create a camera, which defines where we're looking at.
+var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+ 
+var renderer = new THREE.WebGLDeferredRenderer({
+    width: window.innerWidth,
+    height: window.innerHeight,
+    scale: 1, antialias: true,
+    tonemapping: THREE.FilmicOperator, brightness: 2.5
+});
+
+//建立三个平面光源
+var areaLight1 = new THREE.AreaLight(0xff0000, 3);
+areaLight1.position.set(-10, 10, -35);
+areaLight1.rotation.set(-Math.PI / 2, 0, 0);
+areaLight1.width = 4;
+areaLight1.height = 9.9;
+scene.add(areaLight1);
+
+var areaLight2 = new THREE.AreaLight(0x00ff00, 3);
+areaLight2.position.set(0, 10, -35);
+areaLight2.rotation.set(-Math.PI / 2, 0, 0);
+areaLight2.width = 4;
+areaLight2.height = 9.9;
+scene.add(areaLight2);
+
+var areaLight3 = new THREE.AreaLight(0x0000ff, 3);
+areaLight3.position.set(10, 10, -35);
+areaLight3.rotation.set(-Math.PI / 2, 0, 0);
+areaLight3.width = 4;
+areaLight3.height = 9.9;
+scene.add(areaLight3);
+
+
+//render();
+
+function render() {
+    requestAnimationFrame(render);
+    renderer.render(scene, camera);
+}
+
+</script>
+</head>
+<body>
+<div id="Stats-output">
+</div>
+	<div id="WebGL-output">
+	</div>
+</body>
+</html>
