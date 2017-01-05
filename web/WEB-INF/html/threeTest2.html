@@ -18,7 +18,13 @@
 <script src="../js/three/examples/js/postprocessing/RenderPass.js"></script>
 <script src="../js/three/examples/js/postprocessing/ShaderPass.js"></script>
 <script src="../js/three/examples/js/renderers/WebGLDeferredRenderer.js"></script>
+<script src="../js/three/examples/js/lights/RectAreaLightUniformsLib.js"></script>
+<script src="../js/three/examples/js/controls/OrbitControls.js"></script>
 
+<script src="../js/three/examples/js/controls/DragControls.js"></script>
+<!-- 投影器 -->
+<script src="../js/three/examples/js/renderers/Projector.js"></script>
+<script src="../js/three/examples/js/renderers/CanvasRenderer.js"></script>
 
 <script>
 
@@ -27,47 +33,252 @@ var scene = new THREE.Scene();
 
 // create a camera, which defines where we're looking at.
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
- 
-var renderer = new THREE.WebGLDeferredRenderer({
+scene.add(camera);
+// create a render and set the size
+/* var renderer = new THREE.WebGLDeferredRenderer({
     width: window.innerWidth,
     height: window.innerHeight,
     scale: 1, antialias: true,
     tonemapping: THREE.FilmicOperator, brightness: 2.5
-});
+}); */
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;//影子材质
 
-//建立三个平面光源
-var areaLight1 = new THREE.AreaLight(0xff0000, 3);
-areaLight1.position.set(-10, 10, -35);
-areaLight1.rotation.set(-Math.PI / 2, 0, 0);
-areaLight1.width = 4;
-areaLight1.height = 9.9;
-scene.add(areaLight1);
+function init() {
+	var controls = new function () {
+        this.intensity = 70;
+        this.intensity2 = 70;
+        /* this.ljy = 108;
+        this.ljx = -300;
+        this.ljz = 265; */
+    };
+	
+    var matParams = {
+			specular: 0xFFFFFF,
+			shininess: 10000
+		};
 
-var areaLight2 = new THREE.AreaLight(0x00ff00, 3);
-areaLight2.position.set(0, 10, -35);
-areaLight2.rotation.set(-Math.PI / 2, 0, 0);
-areaLight2.width = 4;
-areaLight2.height = 9.9;
-scene.add(areaLight2);
+		var matFloor = new THREE.MeshPhongMaterial( matParams );
+		var matBox = new THREE.MeshPhongMaterial( matParams );
+		var geoFloor = new THREE.BoxGeometry( 2000, 0.1, 2000 );
+		var geoBox = new THREE.BoxGeometry(4,4,4);
+		var mshFloor = new THREE.Mesh( geoFloor, matFloor );
+		var mshBox = new THREE.Mesh( geoBox, matBox );
+		mshBox.position.x=15;
+		mshBox.position.y=3;
+		mshBox.position.z=5;
+		mshFloor.receiveShadow = true;
+		scene.add( mshFloor );
+		scene.add( mshBox );
+	
+	//创建坐标轴
+    var axes = new THREE.AxisHelper(20);
+    scene.add(axes);
+ // position and point the camera to the center of the scene
+    
+	var mats = [];
+        mats.push(new THREE.MeshPhongMaterial({color: 0x009e60,shininess: 10000}));
+        mats.push(new THREE.MeshPhongMaterial({color: 0x009e60,shininess: 10000}));
+        mats.push(new THREE.MeshPhongMaterial({color: 0x0051ba,shininess: 10000}));
+        mats.push(new THREE.MeshPhongMaterial({color: 0x0051ba,shininess: 10000}));
+        mats.push(new THREE.MeshPhongMaterial({color: 0xffd500,shininess: 10000}));
+        mats.push(new THREE.MeshPhongMaterial({color: 0xffd500,shininess: 10000}));
+    var faceMaterial = new THREE.MeshFaceMaterial(mats);
+  //创建立方体cube
+    var cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+    var cubeMaterial = new THREE.MeshPhongMaterial({color: 0xff0000,shininess: 10000});
+    var cube = new THREE.Mesh(cubeGeometry, faceMaterial);
+    cube.castShadow = true;//允许放出阴影
+    cube.receiveShadow = true;
+    cube.position.x = 5;
+    cube.position.y = 3;
+    cube.position.z = 5;
+    scene.add(cube);
+    
+    
+  //增加聚光灯光源
+    var spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.position.set(-40, 60, -10);//设置聚光灯位置
+        spotLight.castShadow = true;//投影,能够照射出阴影的光源
+        spotLight.shadow.mapSize.height = 2048;//提升光贴图质量
+        spotLight.shadow.mapSize.width = 2048;
+        spotLight.distance = 0;
+        spotLight.angle = 0.4;
+        scene.add(spotLight);
+    
+    var rectLight;
+/*     rectLight = new THREE.RectAreaLight( 0xFFFFFF, 3, 2, 10 );
+    rectLight.position.set(-10, 10, -35);
+    rectLight.rotation.set(-Math.PI / 2, 0, 0);
+    rectLight.width = 4;
+    rectLight.height = 9.9;
+    scene.add(rectLight); */
+	
+    rectLight = new THREE.RectAreaLight( 0xFFFFFF, undefined, 2, 10 );
+	rectLight.matrixAutoUpdate = true;
+	
+	rectLight.position.set( 5, 5, 0 );
+	// rectLight.target = mshBox;
+	rectLightHelper = new THREE.RectAreaLightHelper( rectLight );
+	rectLight.add( rectLightHelper );
+	scene.add(rectLight);
+	
+	var rectLight2;
+	rectLight2 = new THREE.RectAreaLight( 0x00ff00, undefined, 2, 10 );
+	rectLight2.matrixAutoUpdate = true;
+	
+	rectLight2.position.set( 15, 5, 0 );
+	// rectLight.target = mshBox;
+	rectLightHelper2 = new THREE.RectAreaLightHelper( rectLight2 );
+	rectLight2.add( rectLightHelper2 );
+	scene.add(rectLight2);
+	
+	camera.position.x = 0;
+    camera.position.y = 30;
+    camera.position.z = 30;
+    //camera.rotation.x=1
+    //camera.rotation.x=100
+    camera.lookAt(scene.position);
+	
+    document.getElementById("WebGL-output").appendChild(renderer.domElement);
+    var objects = [];
+    objects.push(cube);
+    objects.push(mshBox);
+    //拖动控件
+    var dragControls = new THREE.DragControls( objects, camera, renderer.domElement );
+	dragControls.addEventListener( 'dragstart', function ( event ) { console.log(111) } );
+	dragControls.addEventListener( 'dragend', function ( event ) { console.log(222) } );
+    
+	
+	//影片播放==================================================================
+	/* var video = document.getElementById( 'video' );
+     console.log(video)
+    var image = document.createElement( 'canvas' );
+	image.width = 512;
+	image.height = 512;
+    
+    var imageContext = image.getContext( '2d' );
+	imageContext.fillStyle = '#000000';
+	imageContext.fillRect( 0, 0, image.width, image.height );
+    
+	var errocb = function () {
+        console.log('sth wrong!');
+	}
+	if (navigator.getUserMedia) { // 标准的API
+        navigator.getUserMedia({ "video": true }, function (stream) {
+            video.src = stream;
+            video.play();
+        }, errocb);
+	} else if (navigator.webkitGetUserMedia) { // WebKit 核心的API
+        navigator.webkitGetUserMedia({ "video": true }, function (stream) {
+            video.src = window.webkitURL.createObjectURL(stream);
+            video.play();
+        }, errocb);
+	}
+	
+	
+	
+	//
+	texture = new THREE.Texture( image );
 
-var areaLight3 = new THREE.AreaLight(0x0000ff, 3);
-areaLight3.position.set(10, 10, -35);
-areaLight3.rotation.set(-Math.PI / 2, 0, 0);
-areaLight3.width = 4;
-areaLight3.height = 9.9;
-scene.add(areaLight3);
+	var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
 
+	var imageReflection = document.createElement( 'canvas' );
+	imageReflection.width = image.width;
+	imageReflection.height = image.height;
 
-//render();
+	var imageReflectionContext = imageReflection.getContext( '2d' );
+	imageReflectionContext.fillStyle = '#000000';
+	imageReflectionContext.fillRect( 0, 0, image.width, image.height );
 
-function render() {
-    requestAnimationFrame(render);
-    renderer.render(scene, camera);
+	imageReflectionGradient = imageReflectionContext.createLinearGradient( 0, 0, 0, image.height );
+	imageReflectionGradient.addColorStop( 0.2, 'rgba(240, 240, 240, 1)' );
+	imageReflectionGradient.addColorStop( 1, 'rgba(240, 240, 240, 0.8)' );
+
+	var textureReflection = new THREE.Texture( imageReflection );
+
+	var materialReflection = new THREE.MeshBasicMaterial( { map: textureReflection, side: THREE.BackSide, overdraw: 0.5 } );
+
+	//
+
+	var plane = new THREE.PlaneGeometry( image.width, image.height, 4, 4 );
+
+	mesh = new THREE.Mesh( plane, material );
+	mesh.position.z = -10;
+	mesh.scale.x = mesh.scale.y = mesh.scale.z = 1.5;
+	scene.add(mesh);
+
+	mesh = new THREE.Mesh( plane, materialReflection );
+	mesh.position.y = -306;
+	mesh.rotation.x = - Math.PI;
+	mesh.position.z = -20;
+	mesh.scale.x = mesh.scale.y = mesh.scale.z = 1.5;
+	scene.add( mesh );
+	
+	//兰伯特材质的播放器
+	var light = new THREE.DirectionalLight( 0xffffff,2 );
+	light.position.set( 0.5, 1, 1 ).normalize();
+	var ljtexture = new THREE.VideoTexture( video );
+	ljtexture.minFilter = THREE.LinearFilter;
+	ljtexture.magFilter = THREE.LinearFilter;
+	ljtexture.format = THREE.RGBFormat;
+	var parameters = { color: 0xffffff, map: ljtexture };
+	var ljplane = new THREE.PlaneGeometry( 512, 612, 4, 4 );
+	var ljm = new THREE.MeshLambertMaterial(parameters);
+	var ljmesh = new THREE.Mesh( ljplane, ljm );
+	scene.add( ljmesh ); */
+	
+    render();
+    function render() {
+    	/* if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
+
+			imageContext.drawImage( video, 0, 0 );
+
+		 	if ( texture ) texture.needsUpdate = true;
+			if ( textureReflection ) textureReflection.needsUpdate = true;
+
+		}
+ 		imageReflectionContext.drawImage( image, 0, 0 );
+		imageReflectionContext.fillStyle = imageReflectionGradient;
+		imageReflectionContext.fillRect( 0, 0, image.width, image.height ); */
+    	
+		/* ljmesh.position.x = controls.ljx;
+		ljmesh.rotation.y = controls.ljy;
+		ljmesh.position.z = controls.ljz; */
+		
+    	
+    	rectLight.intensity = controls.intensity;
+    	rectLight2.intensity = controls.intensity2;
+    	
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+    }
+    
+    
+    
+	//GUI调试工具
+    var gui = new dat.GUI();
+    gui.add(controls, 'intensity', 0, 1000);
+    gui.add(controls, 'intensity2', 0, 1000);
+    /* gui.add(controls, 'ljx', -300, 300);
+    gui.add(controls, 'ljy', -300, 300);
+    gui.add(controls, 'ljz', -300, 300); */
+    
+    //var orbitControls = new THREE.OrbitControls(camera);  
+    //orbitControls.autoRotate = true;
 }
+window.onload = init;
+
+
 
 </script>
 </head>
 <body>
+<video id="video" autoplay loop webkit-playsinline style="display:none;">
+	
+</video>
 <div id="Stats-output">
 </div>
 	<div id="WebGL-output">
