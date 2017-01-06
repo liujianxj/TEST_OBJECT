@@ -15,6 +15,7 @@
 <script src="../js/three/src/loaders/TextureLoader.js"></script>
 <script src="../js/three/examples/js/controls/DragControls.js"></script>
 
+
 <script src="../js/three/physi.js"></script>
 
 
@@ -23,9 +24,10 @@ Physijs.scripts.worker = '../js/three/physijs_worker.js';
 Physijs.scripts.ammo = '../three/examples/js/libs/ammo.js';
 //var scene = new THREE.Scene();
 var scene = new Physijs.Scene();
-scene.setGravity(new THREE.Vector3( 0, -50, 0 ));
+scene.setGravity(new THREE.Vector3( 0, -150, 0 ));
 var selected_block = null;
 var blocks = [];
+var mouse_position = new THREE.Vector3
 
 
 
@@ -37,36 +39,31 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;//影子材质
 
 function init() {
-	scene.addEventListener(
-			'update',
-			function() {
-
-				if ( selected_block !== null ) {
-					
-					_v3.copy( mouse_position ).add( block_offset ).sub( selected_block.position ).multiplyScalar( 5 );
-					_v3.y = 0;
-					selected_block.setLinearVelocity( _v3 );
-					
-					// Reactivate all of the blocks
-					_v3.set( 0, 0, 0 );
-					for ( _i = 0; _i < blocks.length; _i++ ) {
-						blocks[_i].applyCentralImpulse( _v3 );
-					}
-				}
-
-				scene.simulate( undefined, 1 );
-			}
-		);
-	
 	var controls = new function () {
-        this.clone_x = 15;
+        this.clone_x = 0;
     };
-	
+    
+ // 实例化一个加载器
+    var loader = new THREE.ObjectLoader();
+    // 加载一个资源
+    loader.load(
+    	'model2.json',
+    	function ( geometry ) {
+    		OBJ = geometry.children[0];
+    		//OBJ.getObjectByName("Box2");
+    		
+    		console.log(OBJ.getObjectByName("Box2"))
+    		geometry.translateY(15);
+    		//geometry.children[0].rotation.x += 1
+    		//scene.add( geometry );
+    	}
+    );
+    
+    
 	camera.position.y = 100;
-	camera.position.z = 100;
+	camera.position.z = 130;
 	camera.lookAt(scene.position);
 	scene.add(camera)
-	console.log(camera)
 	//创建坐标轴
     var axes = new THREE.AxisHelper(20);
     scene.add(axes);
@@ -106,13 +103,7 @@ function init() {
 	ground_material = Physijs.createMaterial(
 			new THREE.MeshPhongMaterial(matParams),
 			0.9, // high friction
-			0.2 // low restitution
-		);
-	
-	
-	var planeM = new THREE.MeshPhongMaterial( matParams );
-	var planeGeometry = new Physijs.BoxMesh(
-			new THREE.CubeGeometry(200,1,200),ground_material,0
+			0.1 // low restitution
 		);
 	
 	var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(160, 1, 160), ground_material, 0);
@@ -120,136 +111,92 @@ function init() {
 	
 	//方块物体
     var cubeGeometry = new THREE.BoxGeometry(14, 14, 14);
-    var cubeMaterial = new THREE.MeshPhongMaterial({color: 0xff0000,shininess: 10000});
+	cubeMaterial = Physijs.createMaterial(
+			new THREE.MeshPhongMaterial(matParams),
+			0.9, // high friction
+			0.1 // low restitution
+		);
+    //var cubeMaterial = new THREE.MeshPhongMaterial({color: 0xff0000,shininess: 10000});
     var cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial);
     cube.castShadow = true;//允许放出阴影
     cube.receiveShadow = true;
     cube.position.x = 5;
-    cube.position.y = 123;
+    cube.position.y = 100;
     cube.position.z = 5;
     scene.add(cube);
 	
     //克隆
     var cloned = cube.clone();
-    var m2 = new THREE.MeshPhongMaterial({color:0x7777ff,shininess: 10000});
-    var cube2 = new Physijs.BoxMesh(cloned.geometry, m2);
+    cubeMaterial2 = Physijs.createMaterial(
+			new THREE.MeshPhongMaterial(matParams),
+			0.9, // high friction
+			0.5 // low restitution
+		);
+    //var m2 = new THREE.MeshPhongMaterial({color:0x7777ff,shininess: 10000});
+    var cube2 = new Physijs.BoxMesh(cloned.geometry, cubeMaterial2);
     cube2.translateX(15);
     cube2.translateY(15);
     cube2.translateZ(5)
     cube2.name="clone";
     scene.add(cube2);
-	
     
-    scene.addEventListener(
-		'click',
-		function() {
-
-			alert(33)
-		}
-	);
+    
+  	//球物体
+    var cubeGeometry = new THREE.SphereGeometry(14, 14, 14);
+	cubeMaterial = Physijs.createMaterial(
+			new THREE.MeshPhongMaterial(matParams),
+			0.9, // high friction
+			0.1 // low restitution
+		);
+    //var cubeMaterial = new THREE.MeshPhongMaterial({color: 0xff0000,shininess: 10000});
+    var Sphere = new Physijs.SphereMesh(cubeGeometry, cubeMaterial);
+    Sphere.castShadow = true;//允许放出阴影
+    Sphere.receiveShadow = true;
+    Sphere.position.x = 5;
+    Sphere.position.y = 100;
+    Sphere.position.z = 5;
+    scene.add(Sphere);
+    
+    //scene.setGravity(new THREE.Vector3(10,-50,10));
 	
-    /* var objects = [];
+    var objects = [];
     objects.push(cube);
     objects.push(cube2);
+    objects.push(Sphere);
   	//拖动控件
     var dragControls = new THREE.DragControls( objects, camera, renderer.domElement );
 	dragControls.addEventListener( 'dragstart', function ( event ) { console.log(111) } );
-	dragControls.addEventListener( 'dragend', function ( event ) { console.log(222) } ); */
+	dragControls.addEventListener( 'dragend', function ( event ) { console.log(222) } );
     
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
-	
+	scene.simulate();
     render();
     function render() {
-    	//cube2.translateX(controls.clone_x);
+    	ground.rotation.x = controls.clone_x;
+    	cube2.rotation.x = controls.clone_x;
         requestAnimationFrame(render);
         renderer.render(scene, camera);
-        scene.simulate();
+        ground.__dirtyRotation = true;
+        cube2.__dirtyRotation=true;
+        cube.__dirtyRotation=true;
+        cube.__dirtyPosition=true;
+        cube2.__dirtyPosition=true;
+        ground.__dirtyPosition=true;
+        Sphere.__dirtyRotation=true;
+        Sphere.__dirtyPosition=true;
+        scene.simulate(undefined, 1);
     }
-    
-    
-    initEventHandling()
+
     
     
 	//GUI调试工具
     var gui = new dat.GUI();
-    gui.add(controls, 'clone_x', -1000, 1000);
+    gui.add(controls, 'clone_x', -5, 5);
+    
     //var orbitControls = new THREE.OrbitControls(camera);  
     //orbitControls.autoRotate = true;
 }
 
-initEventHandling = (function() {
-	var _vector = new THREE.Vector3,
-		handleMouseDown, handleMouseMove, handleMouseUp;
-	
-	handleMouseDown = function( evt ) {
-		var ray, intersections;
-		
-		_vector.set(
-			( evt.clientX / window.innerWidth ) * 2 - 1,
-			-( evt.clientY / window.innerHeight ) * 2 + 1,
-			1
-		);
-
-		_vector.unproject( camera );
-		
-		ray = new THREE.Raycaster( camera.position, _vector.sub( camera.position ).normalize() );
-		intersections = ray.intersectObjects( blocks );
-
-		if ( intersections.length > 0 ) {
-			selected_block = intersections[0].object;
-			
-			_vector.set( 0, 0, 0 );
-			selected_block.setAngularFactor( _vector );
-			selected_block.setAngularVelocity( _vector );
-			selected_block.setLinearFactor( _vector );
-			selected_block.setLinearVelocity( _vector );
-
-			mouse_position.copy( intersections[0].point );
-			block_offset.subVectors( selected_block.position, mouse_position );
-			
-			intersect_plane.position.y = mouse_position.y;
-		}
-	};
-	
-	handleMouseMove = function( evt ) {
-		
-		var ray, intersection,
-			i, scalar;
-		
-		if ( selected_block !== null ) {
-			
-			_vector.set(
-				( evt.clientX / window.innerWidth ) * 2 - 1,
-				-( evt.clientY / window.innerHeight ) * 2 + 1,
-				1
-			);
-			_vector.unproject( camera );
-			
-			ray = new THREE.Raycaster( camera.position, _vector.sub( camera.position ).normalize() );
-			intersection = ray.intersectObject( intersect_plane );
-			mouse_position.copy( intersection[0].point );
-		}
-		
-	};
-	
-	handleMouseUp = function( evt ) {
-		
-		if ( selected_block !== null ) {
-			_vector.set( 1, 1, 1 );
-			selected_block.setAngularFactor( _vector );
-			selected_block.setLinearFactor( _vector );
-			
-			selected_block = null;
-		}
-		
-	};
-	
-	return function() {
-		renderer.domElement.addEventListener( 'mousedown', handleMouseDown );
-		renderer.domElement.addEventListener( 'mousemove', handleMouseMove );
-		renderer.domElement.addEventListener( 'mouseup', handleMouseUp );
-	};
-})();
 window.onload = init;
 
 

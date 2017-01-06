@@ -153,7 +153,7 @@ function init() {
     
 	
 	//影片播放==================================================================
-	/* var video = document.getElementById( 'video' );
+	var video = document.getElementById( 'video' );
      console.log(video)
     var image = document.createElement( 'canvas' );
 	image.width = 512;
@@ -228,11 +228,11 @@ function init() {
 	var ljplane = new THREE.PlaneGeometry( 512, 612, 4, 4 );
 	var ljm = new THREE.MeshLambertMaterial(parameters);
 	var ljmesh = new THREE.Mesh( ljplane, ljm );
-	scene.add( ljmesh ); */
+	scene.add( ljmesh );
 	
     render();
     function render() {
-    	/* if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
+    	if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
 
 			imageContext.drawImage( video, 0, 0 );
 
@@ -242,11 +242,11 @@ function init() {
 		}
  		imageReflectionContext.drawImage( image, 0, 0 );
 		imageReflectionContext.fillStyle = imageReflectionGradient;
-		imageReflectionContext.fillRect( 0, 0, image.width, image.height ); */
+		imageReflectionContext.fillRect( 0, 0, image.width, image.height );
     	
-		/* ljmesh.position.x = controls.ljx;
+		ljmesh.position.x = controls.ljx;
 		ljmesh.rotation.y = controls.ljy;
-		ljmesh.position.z = controls.ljz; */
+		ljmesh.position.z = controls.ljz;
 		
     	
     	rectLight.intensity = controls.intensity;
@@ -266,8 +266,8 @@ function init() {
     gui.add(controls, 'ljy', -300, 300);
     gui.add(controls, 'ljz', -300, 300); */
     
-    //var orbitControls = new THREE.OrbitControls(camera);  
-    //orbitControls.autoRotate = true;
+    var orbitControls = new THREE.OrbitControls(camera);  
+    orbitControls.autoRotate = true;
 }
 window.onload = init;
 
