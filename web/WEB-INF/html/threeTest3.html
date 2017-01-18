@@ -53,7 +53,6 @@ function init() {
     		OBJ = geometry.children[0];
     		//OBJ.getObjectByName("Box2");
     		
-    		console.log(OBJ.getObjectByName("Box2"))
     		geometry.translateY(15);
     		//geometry.children[0].rotation.x += 1
     		//scene.add( geometry );
@@ -121,7 +120,7 @@ function init() {
     var cube = new Physijs.BoxMesh(cubeGeometry, cubeMaterial);
     cube.castShadow = true;//允许放出阴影
     cube.receiveShadow = true;
-    cube.position.x = 5;
+    cube.position.x = -25;
     cube.position.y = 100;
     cube.position.z = 5;
     scene.add(cube);
@@ -157,8 +156,12 @@ function init() {
     Sphere.position.y = 14;
     Sphere.position.z = -25;
     scene.add(Sphere);
-    
-    
+  	//克隆
+    var Sphere2 = Sphere.clone();
+  	console.log(Sphere2)
+    Sphere2.position.set(0,10,0)
+  	scene.add(Sphere2);
+  	
     //scene.setGravity(new THREE.Vector3(10,-50,10));
 	
     //var objects = [];
@@ -174,7 +177,15 @@ function init() {
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
 	scene.simulate();
 	
-	
+	/* scene.addEventListener(
+			'update',
+			function() {
+				for (var _i = 0; _i < objects.length; _i++ ) {
+					objects[_i].applyCentralImpulse(mouse_position);
+				}
+				scene.simulate( undefined, 1 );
+			}
+		) */;
 	
 	//事件===========================================================================
 	initEventHandling();
@@ -197,7 +208,7 @@ function init() {
         	cylinder.__dirtyPosition=true;
             cylinder.__dirtyRotation=true;
         }
-        scene.simulate(undefined, 1);
+        scene.simulate();
         
         //da();
     }
@@ -207,8 +218,8 @@ function init() {
     var gui = new dat.GUI();
     gui.add(controls, 'clone_x', -5, 5);
     
-    var orbitControls = new THREE.OrbitControls(camera);  
-    orbitControls.autoRotate = true;
+    //var orbitControls = new THREE.OrbitControls(camera);  
+    //orbitControls.autoRotate = true;
 }
 
 var cylinder;
@@ -229,8 +240,6 @@ initEventHandling = (function() {
 		ray = new THREE.Raycaster( camera.position, _vector.sub( camera.position ).normalize() );
 		intersections = ray.intersectObjects( objects );
 		obj = intersections[0].object;
-		//console.log(_vector.x+","+_vector.y+","+_vector.z)
-		console.log(intersections[0].object.position)
 		//增加圆柱
 		var matParams = {
 			specular: 0xFFFFFF,
@@ -251,8 +260,19 @@ initEventHandling = (function() {
 	    cylinder.position.z = obj.position.z-1;
 	    cylinder.rotation.x = -0.5 * Math.PI;
 	    cylinder.name="yuanzhu"
-	    scene.add(cylinder)
+	    //scene.add(cylinder)
 		console.log("down")
+		
+		
+		/* if ( intersections.length > 0 ) {
+				
+				_vector.set( 5, 1, 5 );
+				obj.setAngularFactor( _vector );
+				obj.setAngularVelocity( _vector );
+				obj.setLinearFactor( _vector );
+				obj.setLinearVelocity( _vector );
+				
+		} */
 	};
 	
 	handleMouseMove = function( evt ) {

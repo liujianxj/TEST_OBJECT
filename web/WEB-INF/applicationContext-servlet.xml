@@ -15,7 +15,8 @@
     		http://www.springframework.org/schema/tx/spring-tx.xsd
     		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">  
 	
-    <!-- Enables the Spring MVC @Controller programming model -->  
+	<mvc:default-servlet-handler/>
+	
     <context:annotation-config/> 
       
     <context:component-scan base-package="com.lj.exchange" />
@@ -24,8 +25,8 @@
     <mvc:resources mapping="/html/**" location="/WEB-INF/html/" />
     <mvc:resources mapping="/zip/**" location="/WEB-INF/zip/" />
     <mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
+    <mvc:resources mapping="/static/**" location="/WEB-INF/static/" />
     <mvc:resources mapping="/**" location="/" />
-    
     
     <!-- <import resource="user_spring.xml" /> -->
 

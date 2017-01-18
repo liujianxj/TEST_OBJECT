@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+	default-lazy-init="true">
+
+	<description>Shiro安全配置</description>
+
+	<!-- Shiro's main business-tier object for web-enabled applications -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- <property name="authenticator" ref="authenticator" /> -->
+		<property name="realm" ref="MyRealm"/> 
+		<property name="cacheManager" ref="shiroEhcacheManager" />
+		<!-- 记住我功能 -->
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+        <property name="sessionManager" ref="sessionManager"/>
+	</bean>
+	
+	<bean id="MyRealm" class="com.lj.security.realm.ShiroDbRealm"></bean>
+	<bean id="atLeastOneSuccessfulStrategy" class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy" />
+
+<!-- 	<bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+		<property name="realms">
+			<list>
+				<bean id="shiroDbRealm" class="com.tl.b2b.security.realm.ShiroDbRealm">
+					<property name="userService" ref="userService" />
+				</bean>
+			</list>
+		</property>
+		<property name="authenticationStrategy" ref="atLeastOneSuccessfulStrategy" />
+
+	</bean> -->
+	
+	<!-- cookie记住我配置开始 -->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	    <constructor-arg value="juli.com"/>
+	    <property name="httpOnly" value="true"/>
+	    <property name="maxAge" value="2592000"/>
+	</bean>  
+	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	    <constructor-arg value="rememberMe"/>
+	    <property name="httpOnly" value="true"/>
+	    <property name="maxAge" value="2592000"/><!-- 30天 -->
+	</bean>
+	
+	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">  
+		<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>  
+		<property name="cookie" ref="rememberMeCookie"/>  
+	</bean>
+	
+	<!-- 会话管理器 -->
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionIdCookieEnabled" value="true"/>
+		<property name="sessionIdCookie" ref="sessionIdCookie"/>
+	</bean>
+	<!-- cookie记住我配置结束 -->
+
+	<!-- 項目自定义的Realm, 用户名验证 -->
+	<!-- <bean id="dbRealm" class="com.issbull.juniu.security.realm.ShiroDbRealm"> 
+		<property name="userService" ref="userService" /> </bean> -->
+
+	<!-- Shiro Filter -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/login" />
+		<property name="unauthorizedUrl" value="/index/403" />
+		<property name="filters">
+            <map>
+                <entry key="roleOrFilter">
+                    <bean class="com.lj.security.realm.RolesOrAuthorizationFilter" />
+                </entry>
+            </map>
+        </property>
+		<property name="filterChainDefinitions">
+			<value>
+			<!-- 注意顺序为：权限控制，不需要登录，需要登录 。新增链接一定要按照顺序添加，否则会出现页面访问问题-->
+				<!-- 角色权限控制URL -->
+				<!-- roles[],perms[]  -->
+				/enterprise/enterpriseEditPage = authc,roles[r1]<!-- 企业基本信息编辑 -->
+				/enterprise/enterpriseEdit = authc,roles[r1] <!-- 企业基本信息编辑提交 -->
+				/memberManage/userManagePage = authc,roles[r1] <!-- 成员管理页面 -->
+				/memberManage/deleteMembers = authc,roles[r1] <!-- 删除成员提交 -->
+				/memberManage/accessMember = authc,roles[r1] <!-- 审核通过提交 -->
+				/memberManage/transferRole = authc,roles[r1] <!-- 转移角色提交 -->
+				/memberManage/changeRole = authc,roles[r1] <!-- 转换角色提交 -->
+				/memberManage/inviteMemberPage = authc,roles[r1] <!-- 邀请新成员页面 -->
+				/memberManage/inviteMember = authc,roles[r1] <!-- 邀请新成员提交 -->
+				/enterprise/tradeAccount = authc,roles[r1] <!-- 收款账户 -->
+				<!-- /settings/bankAccount/add = authc,roles[r1] 收款账户添加页面 -->
+				/enterprise/insertBankAccount = authc,roles[r1] <!-- 收款账户添加提交 -->
+				 <!-- /enterprise/manage/transactionDetails = authc,roles[r1]交易明细页面(差操作按钮) -->
+				/binding/mailBindingStagePage = authc,roles[r1] <!-- 绑定企业邮箱页面 -->
+				/binding/mailBindingStageOne = authc,roles[r1] <!-- 绑定企业邮箱发送提交 -->
+				<!-- /enterprise/enterpriseDetailPage = authc,roles[r1] 企业中心首页-logo旁边的编辑按钮 -->
+				/supplier/companyInfo = authc,roles[r1] <!-- 公司信息 -->
+				/supplier/updateCompanyInfo = authc,roles[r1] <!-- 供应商公司信息保存提交 -->
+				/supplier/showSupplierInfo = authc,roles[r1] <!-- 公司介绍页面 -->
+				/enterprise/insertProjectExperience = authc,roles[r1] <!-- 保存项目经验提交 -->
+				/enterprise/updateProjectExperience = authc,roles[r1] <!-- 修改项目经验提交 -->
+				/enterprise/deleteProjectExperience = authc,roles[r1] <!-- 删除项目经验提交 -->
+				/supplier/updateSupplierInfo = authc,roles[r1] <!-- 企业介绍修改提交 -->
+				/contractedPartner/toPartner = authc,roles[r1] <!-- 公司成员页面 -->
+				/contractedPartner/queryStatus = authc,roles[r1] <!-- 公司成员保存提交 -->
+				/companyApprove/approve = authc,roles[r1] <!-- 企业认证页面 -->
+				 <!-- /binding/oldPhoneNumber = roles[r1]重新绑定手机号页面(有漏洞……以后想办法) -->
+				/signContractPartner/signToSupplier = authc,roles[r1] <!-- 合作伙伴页面 -->
+				/signContractPartner/cancelShow = authc,roles[r1] <!-- 修改合作伙伴展示提交 -->
+				/enterprise/serviceCenter  = authc,roleOrFilter[r1,r2,r3]
+				
+				/signContract/contractSupplier/** = authc,roleOrFilter[r1,r2] <!-- 供应商签约页面 -->
+				/crowdsourcedAttention/updateAttention = authc,roleOrFilter[r1,r2] <!-- 供应商或项目关注操作提交 -->
+				/crowdsourcedAttention/myAttention = authc,roleOrFilter[r1,r2] <!-- 关注管理页面 -->
+				/signContract/toContract/** = authc,roleOrFilter[r1,r2] <!-- 签约企业页面(差交易操作) -->
+				
+				<!--/crowdsourced/enterpriseCheck = authc,roleOrFilter[r1,r2,r3]  参与投标页面 -->
+				/enterprise/owner/projects = authc,roleOrFilter[r1,r3] <!-- 我是发包方-项目管理(差交易操作) -->
+				/enterprise/supplier/projects = authc,roleOrFilter[r1,r3] <!-- 我是供应商-项目管理(差交易操作) -->
+				/evaluate/manage = authc,roleOrFilter[r1,r3] <!-- 评价管理 -->
+				<!--/crowdsourced/getCertificate = authc,roleOrFilter[r1,r2,r3]  发布项目页面 -->
+				 <!-- /crowdsourced/create = authc,roleOrFilter[r1,r3] 发布项目提交 -->
+				/crowdsourced/create = authc
+				/tlrRegister/success = authc
+			
+			
+				<!-- 不需要登陆anon -->
+				/payment/aliPayNotify/** = anon
+				/payment/aliPayReturn/** = anon
+				/payment/orderConfirm/** = anon
+				/payment//orderConfirmPage/** = anon
+				/enterprise/findServiceArea/** = anon
+				/enterprise/findTypeId/** = anon
+				/enterprise/findEnterpriseList/** = anon
+				/enterprise/supplierDetailPage/** = anon
+				/enterprise/supplierDetail/** = anon
+				/enterprise/findTaskOrder/** = anon
+				/enterprise/findEnterprisePage/** = anon
+				/enterprise/findEnterprise/** = anon
+				/enterprise/findExperienceList/** = anon
+				/enterprise/employerDetailPage/** = anon
+				/enterprise/findEnterpriseTaskStatistics/** = anon
+				/enterprise/findEnterprisePerson/** = anon
+				/enterprise/queryTechnicalScore/** = anon
+				/enterprise/shareEnterprise/** = anon
+				/signContract/findEnterpriseBySupplier/** = anon
+				/enterprise/findServiceAreaRedis = anon 
+				/enterprise/findEnterpriseListRedis = anon 
+				
+				<!-- 需要登陆authc -->
+				/main = authc
+				/enterprise/** = authc
+				/evaluate/** = authc
+				/payment/** = authc
+				/settings/** = authc
+				/signContract/** = authc
+				/binding/mailBindingStagePage/** = authc
+				/binding/mailBindingStageOne/** = authc
+				/binding/mailBindingStageTwo/** = authc
+				/binding/reBindingMail/** = authc
+				/binding/bindingPage/** = authc
+				/binding/oldPhoneNumber/** = authc
+				/binding/newPhoneNumber/** = authc
+				/binding/updatePhoneNumberSuccess/** = authc
+				/contractedPartner/** = authc
+				/crowdsourcedAttention/** = authc
+				/crowdsourced/create/** = authc
+				/crowdsourced/success/** = authc
+				/crowdsourced/editTask/** = authc
+				/stationMessagePage/** = authc
+				/memberManage/** = authc
+				/contract/** = authc
+				/companyApprove/approve = authc
+				/user/userInfoCheck = authc
+				/enterpriseMessagePage = authc
+				/userMessagePage/* = authc
+				/enterprise/viewJoinEnterprise/* = authc
+				
+				
+				
+				
+			</value>
+		</property>
+	</bean>
+
+	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<!-- AOP式方法级权限检查 -->
+<!-- 	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean> -->
+	<!-- 用户授权信息Cache, 采用EhCache -->
+
+	<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml" />
+	</bean>
+</beans>
